@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://cxf.apache.org/jaxrs
+       http://cxf.apache.org/schemas/jaxrs.xsd">
+
+    <import resource="classpath:META-INF/cxf/cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
+
+    <jaxrs:server id="restApiV1" address="/v1">
+        <jaxrs:serviceBeans>
+            <!--<ref bean="resume"/>-->
+            <!--<ref bean="module"/>-->
+            <!--<ref bean="prod"/>-->
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <ref bean="jsonProvider"/>
+        </jaxrs:providers>
+    </jaxrs:server>
+    <!-- provider beans-->
+    <bean id="jsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider"/>
+
+    <!-- resource beans-->
+    <!--<bean id="resume" class="cn.mailtech.edu.resume.resource.impl.ResumeImpl"/>-->
+    <!--<bean id="module" class="cn.mailtech.edu.resume.resource.impl.ModuleImpl"/>-->
+    <!--<bean id="prod" class="cn.mailtech.edu.resume.resource.impl.ProdImpl"/>-->
+</beans>

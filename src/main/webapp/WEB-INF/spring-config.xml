@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <context:annotation-config />
+    <context:component-scan base-package="helab.service"/>
+    <!--<context:property-placeholder location="classpath:resume_app.properties"/>-->
+    <bean id="configBean" class="helab.common.CommonConfigBean">
+        <property name="location">
+            <value>classpath:app.properties</value>
+        </property>
+    </bean>
+
+    <import resource="datasource.xml"/>
+    <import resource="cxf-bean.xml"/>
+
+    <jpa:repositories base-package="helab.repository"
+                      transaction-manager-ref="transactionManager"
+                      entity-manager-factory-ref="entityManagerFactory"/>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="helab.model"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="database" value="MYSQL"/>
+                <property name="generateDdl" value="false"/>
+                <property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect"/>
+                <property name="showSql" value="false"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        <property name="jpaDialect">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+        </property>
+    </bean>
+    <!-- 配置事务-->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!--<aop:config>-->
+    <!--<aop:advisor pointcut="execution(* cn.mailtech.edu.resume.resource..*(..))" advice-ref="txAdvice"/>-->
+    <!--<aop:advisor pointcut="execution(* cn.mailtech.edu.resume.service..*(..))" advice-ref="txAdvice"/>-->
+    <!--</aop:config>-->
+
+    <!--<tx:advice id="txAdvice" transaction-manager="transactionManager">-->
+    <!--<tx:attributes>-->
+    <!--<tx:method name="*" rollback-for="Exception"/>-->
+    <!--</tx:attributes>-->
+    <!--</tx:advice>-->
+
+</beans>
