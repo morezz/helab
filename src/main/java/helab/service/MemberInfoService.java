@@ -7,8 +7,10 @@ public interface MemberInfoService {
 
     ServiceResult listMember(String type);
 
-    ServiceResult create(String nameCN, String nameEN, String type, String email);
+    ServiceResult create(String nameCN, String nameEN, String type, String email, String avatarPath);
 
-    ServiceResult update(Long id, String nameCN, String nameEN, String type, String email);
+    ServiceResult update(Long id, String nameCN, String nameEN, String type, String email, String avatarPath);
+
+    ServiceResult delete(Long id);
 
 }

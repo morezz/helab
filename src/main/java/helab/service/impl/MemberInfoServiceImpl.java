@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,7 @@ public class MemberInfoServiceImpl implements MemberInfoService {
     }
 
 
-    public ServiceResult create(String nameCN, String nameEN, String type, String email) {
+    public ServiceResult create(String nameCN, String nameEN, String type, String email, String avatarPath) {
         if (StringUtils.isBlank(nameCN) || StringUtils.isBlank(nameEN) || StringUtils.isBlank(type)) {
             LOGGER.error("create member error, nameCN or nameEN or type is null");
             return ServiceResult.failResult("MEMBERINFO_CREATE_NAMECN_OR_NAMEEN_OR_TYPE_NULL");
@@ -56,11 +57,12 @@ public class MemberInfoServiceImpl implements MemberInfoService {
         memberInfo.setNameEN(nameEN);
         memberInfo.setType(type);
         memberInfo.setEmail(email);
+        memberInfo.setAvatar(avatarPath);
         memberInfoRepository.save(memberInfo);
         return ServiceResult.successResult();
     }
 
-    public ServiceResult update(Long id, String nameCN, String nameEN, String type, String email) {
+    public ServiceResult update(Long id, String nameCN, String nameEN, String type, String email, String avatarPath) {
         if (StringUtils.isBlank(nameCN) || StringUtils.isBlank(nameEN) || StringUtils.isBlank(type)) {
             LOGGER.error("update member error, nameCN or nameEN or type is null");
             return ServiceResult.failResult("MEMBERINFO_CREATE_NAMECN_OR_NAMEEN_OR_TYPE_NULL");
@@ -70,8 +72,20 @@ public class MemberInfoServiceImpl implements MemberInfoService {
         memberInfo.setNameEN(nameEN);
         memberInfo.setType(type);
         memberInfo.setEmail(email);
+        memberInfo.setAvatar(avatarPath);
         memberInfoRepository.save(memberInfo);
         return ServiceResult.successResult();
+    }
+
+    public ServiceResult delete(Long id) {
+        MemberInfo memberInfo = memberInfoRepository.findOne(id);
+        File file = new File(memberInfo.getAvatar());
+        if (file.exists()) {
+            file.delete();
+        }
+        memberInfoRepository.delete(memberInfo);
+        return ServiceResult.successResult();
+
     }
 
 }
